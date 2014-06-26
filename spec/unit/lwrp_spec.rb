@@ -133,6 +133,21 @@ describe "LWRP" do
       cls.node[:penguin_name].should eql("jackass")
     end
 
+    context "lazy default values" do
+      let(:klass) do
+        Class.new(Chef::Resource::LWRPBase) do
+          resource_name :sample_resource
+          attribute :food, default: lazy { 'BACON!'*3 }
+        end
+      end
+
+      let(:instance) { klass.new('kitchen') }
+
+      it "evaluates the default value when requested" do
+        expect(instance.food).to eq('BACON!BACON!BACON!')
+      end
+    end
+
   end
 
   describe "Lightweight Chef::Provider" do

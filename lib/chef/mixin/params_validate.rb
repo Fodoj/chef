@@ -95,6 +95,11 @@ class Chef
             val = arg
           else
             val = validate({ symbol => arg }, { symbol => validation })[symbol]
+
+            # Handle the case where the "default" was a DelayedEvaluator
+            if val.is_a?(DelayedEvaluator)
+              val = val.call
+            end
           end
           self.instance_variable_set(iv_symbol, val)
         end
